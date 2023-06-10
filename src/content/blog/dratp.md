@@ -1,14 +1,14 @@
 ---
-author: Nishant
-pubDatetime: 2023-03-03T00:00:00Z
+author: Nishant Iyer
+pubDatetime: 2023-03-03T15:22:00Z
 title: DRATP
-postSlug: dratp
+postSlug: dynamic-resource-allocation-and-task-prioritization
 featured: true
 draft: false
 tags:
   - docs
 ogImage: ""
-description: Dynamic Resource Allocation and Task Prioritization plugin for each instance in CoaaS.
+description: DRATP
 ---
 
 ## DRATP (Dynamic Resource Allocation and Task Prioritization):

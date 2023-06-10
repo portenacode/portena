@@ -8,7 +8,7 @@ draft: false
 tags:
   - docs
 ogImage: ""
-description: "Portena Distributed Virtual Personal Computing"
+description: Portena Distributed Virtual Personal Computing
 ---
 
 ## Remote Display Performance:

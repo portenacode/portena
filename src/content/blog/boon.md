@@ -1,6 +1,6 @@
 ---
-author: Nishant
-pubDatetime: 2023-5-22T15:22:00Z
+author: Nishant Iyer
+pubDatetime: 2023-05-22T15:22:00Z
 title: An old project as a boon for prototyping Portena
 postSlug: an-old-project-as-a-boon-for-prototyping-portena
 featured: true
@@ -8,7 +8,7 @@ draft: false
 tags:
   - docs
 ogImage: ""
-description: Great coincidence that an old esp32 port forawarding module i made is coming to use in my current project.
+description: Overview
 ---
 
 # An old project as a boon for prototyping Portena

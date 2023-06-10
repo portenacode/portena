@@ -8,7 +8,7 @@ draft: false
 tags:
   - docs
 ogImage: ""
-description: "Resume work."
+description: Resume work.
 ---
 
 Hello there, After a short break for my annual exams I’m back to the development of Portena. Here’s what I’m planning to do and make for the next few months -

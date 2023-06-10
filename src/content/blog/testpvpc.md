@@ -1,17 +1,14 @@
 ---
-author: Nishant
-pubDatetime: 2023-03-05T00:00:00Z
-title: Testing PVPC in OpenShift
-postSlug: testing-pvpc-in-openshift
+author: Nishant Iyer
+pubDatetime: 2023-03-05T15:57:52.737Z
+title: PVPC test
+postSlug: pvpc-test
 featured: true
-draft: false
-tags:
-  - docs
 ogImage: ""
-description:
-  Portena Virtual Personal Computing
+tags:
+  - release
+description: testing PVPC in pvpc testbed
 ---
-
 ## Experiments and Evaluations:
 
 The Portena testbed consists of state-of-the-art server configurations and a variety of clients, aiming to evaluate the performance of the system. The topology of the testbed is illustrated in Figure 4. It comprises three service nodes, one benchmark server, and multiple clients connected through two 100Mbps Ethernets Infibands with a gateway.

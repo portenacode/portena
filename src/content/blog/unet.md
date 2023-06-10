@@ -8,8 +8,7 @@ draft: false
 tags:
   - technology
 ogImage: ""
-description:
-  Remote connection Protocol
+description: Remote connection Protocol
 ---
 
 uNet is a revolutionary technology integrated into the Portena system, designed to deliver exceptional performance and seamless user experience in remote display applications. By leveraging advanced optimization techniques and cutting-edge networking protocols, uNet overcomes the limitations of traditional remote display systems, providing faster application startup, low latency, and efficient media streaming.

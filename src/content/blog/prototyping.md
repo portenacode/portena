@@ -1,15 +1,14 @@
 ---
-author: Nishant
-pubDatetime: 2023-04-23T00:00:00Z
-title: Portena
-postSlug: portena
+author: Nishant Iyer
+pubDatetime: 2023-04-3T15:22:00Z
+title: prototyping portena with what I have at home
+postSlug: prototyping-portena-with-what-i-have 
 featured: true
 draft: false
 tags:
   - docs
 ogImage: ""
-description:
-  Prototyping Portena with what I have.
+description: Overview
 ---
 
 I thought quite a lot about prototyping and creating a mini version of Portena and chose ESP32 as the microcontroller.

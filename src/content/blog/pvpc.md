@@ -1,15 +1,14 @@
 ---
-author: Nishant
-pubDatetime: 2023-02-22T00:00:00Z
-title: Portena and Distributed Virtual Personal Computing
-postSlug: portena-and-distributed-virtual-personal-computing
+author: Nishant Iyer
+pubDatetime: 2023-02-22T15:22:00Z
+title: PVPC
+postSlug: portenavirtualpersonalcomputing
 featured: true
 draft: false
 tags:
   - docs
 ogImage: ""
-description:
-  Portena Distributed Virtual Personal Computing
+description: the pvpc paradigm
 ---
 
 In the realm of **Portena** and its cutting-edge technologies, the traditional notions of personal computing have transcended the confines of physical PCs. Personal computing now extends beyond isolated machines, with the true essence residing in personalized computing environments and the services they provide. Physical devices such as desktops, laptops, cellphones, and PDAs serve primarily as interfaces to access these virtual personal computing environments.
