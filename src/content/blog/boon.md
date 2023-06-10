@@ -1,134 +1,72 @@
 ---
-author: Sat Naing
-pubDatetime: 2022-09-25T15:20:35Z
-title: Customizing AstroPaper theme color schemes
-postSlug: ""
-featured: false
+author: Nishant
+pubDatetime: 2023-5-22T15:22:00Z
+title: An old project as a boon for prototyping Portena
+postSlug: an-old-project-as-a-boon-for-prototyping-portena
+featured: true
 draft: false
 tags:
-  - color-schemes
   - docs
 ogImage: ""
-description:
-  How you can enable/disable light & dark mode; and customize color schemes
-  of AstroPaper theme.
+description: Great coincidence that an old esp32 port forawarding module i made is coming to use in my current project.
 ---
 
-This post will explain how you can enable/disable light & dark mode for the website. Moreover, you'll learn how you can customize color schemes of the entire website.
+# An old project as a boon for prototyping Portena
+publishedAt: '2023-5-22'
+summary: 'ESPFA - ESP32 Port Forwarding Accelerator'
 
-## Table of contents
+Today's blog is a living proof that some things happen for a reason. Code I wrote 2 years back is now a real boon to my current situation. It literally was a perfect fit for my errors!
 
-## Enable/disable light & dark mode
+2 years ago, when I was in grade 8, I built a Port Forwarding Accelerator called ESPFA for a project as my local router supported only 20 port forwarding rules. I needed more. My local router can forward a range of ports using one rule so I needed something inside my local network that could receive traffic on those ports and forward them to other IPs on my local network. It sounded like a good task for an ESP32 chip.
 
-AstroPaper theme will include light and dark mode by default. In other words, there will be two color schemes\_ one for light mode and another for dark mode. This default behavior can be disabled in SITE configuration object of the `src/config.ts` file.
+I was trying with an Arduino Nano to build a small solar tracker, made it well, you may find it [here](https://nishantiyer.netlify.app/gallery). I wanted to go a step ahead and create a swarm of solar trackers that could act like a charging point for my phone, but encountered many issues while creating it.
 
-```js
-// file: src/config.ts
-export const SITE = {
-  website: "https://astro-paper.pages.dev/",
-  author: "Sat Naing",
-  desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
-  title: "AstroPaper",
-  ogImage: "astropaper-og.jpg",
-  lightAndDarkMode: true, // true by default
-  postPerPage: 3,
-};
-```
+The lwip library as delivered with the ESP-IDF and Arduino IDEs does not support port forwarding back onto the same network, and the Arduino IDE, which I normally use, does not support modifying the lwip library. So, this was my first attempt at using ESP-IDF.
 
-To disable `light & dark mode` set `SITE.lightAndDarkMode` to `false`.
+Starting with ESP-IDF version 4.4.0, I made some modifications to the following lwip files to support port forwarding back onto the same network the packets came in on.
 
-## Choose primary color scheme
+I had to hard code turning on port forwarding in `opt.h` because `menuconfig` does not handle turning on all options needed:
 
-By default, if we disable `SITE.lightAndDarkMode`, we will only get system's prefers-color-scheme.
+- ESP-IDF\components\lwip\lwip\src\include\lwip\opt.h
 
-Thus, to choose primary color scheme instead of prefers-color-scheme, we have to set color scheme in the primaryColorScheme variable inside `public/toggle-theme.js`.
+The ESP32 Local Port Forwarder, as built, can support up to 32 port forwarding rules as defined by `IP_PORTMAP_MAX` set in `lwip_napt.h`.
 
-```js
-/* file: public/toggle-theme.js */
-const primaryColorScheme = ""; // "light" | "dark"
+As built, on first run after firmware install with a clean nvs, an AP with SSID `ESP32LocalPortForwarder` is started. Connect to that network, then to `192.168.4.1` with a browser to setup static IP network config info for your local network. After it reboots, the AP will be turned off. Connect to the static IP with a browser to configure port forwarding rules. If the ESP32 is connected to a serial interface, then all commands built into Martin-Ger's ESP32 NAT Router serial interface are still available, except the AP will be turned off after the static IP is set.
 
-// Get theme data from local storage
-const currentTheme = localStorage.getItem("theme");
+I also included OTA firmware updates through the web like I do in all my ESP32 projects so I can do firmware updates without physically connecting to the ESP32.
 
-// other codes etc...
-```
+This is a firmware to use the ESP32 as WiFi NAT router. It can be used as:
 
-The **primaryColorScheme** variable can hold two values\_ `"light"`, `"dark"`. You can leave the empty string (default) if you don't want to specify the primary color scheme.
+- Simple range extender for an existing WiFi network
+- Setting up an additional WiFi network with different SSID/password for guests or IOT devices
 
-- `""` - system's prefers-color-scheme. (default)
-- `"light"` - use light mode as primary color scheme.
-- `"dark"` - use dark mode as primary color scheme.
+It can achieve a bandwidth of more than 15mbps.
 
-<details><summary>Why 'primaryColorScheme' is not inside config.ts?</summary>
+The code is based on the [Console Component](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/console.html#console) and the [esp-idf-nat-example](https://github.com/jonask1337/esp-idf-nat-example).
 
-> To avoid color flickering on page reload, we have to place the toggle-switch JavaScript codes as early as possible when the page loads. It solves the problem of flickering, but as a trade-off, we cannot use ESM imports anymore.
+## Performance
 
-[Click here](https://docs.astro.build/en/reference/directives-reference/#isinline) to know more about Astro's `is:inline` script.
+All tests used `IPv4` and the `TCP` protocol.
 
-</details>
+| Board        | Tools   | Optimization | CPU Frequency | Throughput    | Power |
+| ------------ | ------- | ------------ | ------------- | -------------- | ----- |
+| `ESP32D0WDQ6` | `iperf3` | `0g`         | `240MHz`      | `16.0 MBits/s` | `1.6 W` |
+| `ESP32D0WDQ6` | `iperf3` | `0s`         | `240MHz`      | `10.0 MBits/s` | `1.8 W` |
+| `ESP32D0WDQ6` | `iperf3` | `0g`         | `160MHz`      | `15.2 MBits/s` | `1.4 W` |
+| `ESP32D0WDQ6` | `iperf3` | `0s`         | `160MHz`      | `14.1 MBits/s` | `1.5 W` |
 
-## Customize color schemes
+Find more at - [https://github.com/NishantIyer/espfa](https://github.com/NishantIyer/espfa)
 
-Both light & dark color schemes of AstroPaper theme can be customized. You can do this in `src/styles/base.css` file.
+How is it helping Portena?
 
-```css
-/* file: src/styles/base.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+uNet (my firmware) that currently utilizes ESP32 for prototyping is limited by the limitation of local routers and solves a hell lot of problems I'm facing.
 
-@layer base {
-  :root,
-  html[data-theme="light"] {
-    --color-fill: 251, 254, 251;
-    --color-text-base: 40, 39, 40;
-    --color-accent: 0, 108, 172;
-    --color-card: 230, 230, 230;
-    --color-card-muted: 205, 205, 205;
-    --color-border: 236, 233, 233;
-  }
-  html[data-theme="dark"] {
-    --color-fill: 47, 55, 65;
-    --color-text-base: 230, 230, 230;
-    --color-accent: 26, 217, 217;
-    --color-card: 63, 75, 90;
-    --color-card-muted: 89, 107, 129;
-    --color-border: 59, 70, 85;
-  }
-  /* other styles */
-}
-```
+- Port forwarding: When the server is behind a firewall or NAT, which is, in fact, as I'm using a third party now, ESPFA is a great solution to set up port forwarding on your local network, enabling incoming traffic on specific ports to be forwarded to your server. This way, you can establish a direct connection to your server from outside your network.
+- Secure Remote Access: By using a remote connection protocol like SSH or uNet, you can securely access your server over the internet. The ESPFA firmware helps by efficiently forwarding the necessary network traffic to your server, ensuring that your remote connection protocol works as intended.
+- Easier testing and work: The ESPFA firmware allows you to create a local port forwarder using an ESP32 chip. This means you can simulate remote connections to your server within your local network, making it easier to prototype and test the remote access functionality without getting a huge bill after my free tier ends.
+- Gosh, OTA! I work in parallel with ESPs, one for the physical device and the other times for building client modules. OTA is a big saver here.
 
-In AstroPaper theme, `:root` and `html[data-theme="light"]` selectors are used as the light color scheme and `html[data-theme="dark"]` is used the dark color scheme. If you want to customize your custom color scheme, you have to specify your light color scheme inside `:root`,`html[data-theme="light"]` and dark color scheme inside `html[data-theme="dark"]`.
+Obviously, I will have to make this as my codebase and modify a bit more, but really, this seems like a miracle.
 
-Colors are declared in CSS custom property (CSS Variable) notation. Color property values are written in rgb values. (Note: instead of `rgb(40, 39, 40)`, only specify `40, 39, 40`)
-
-Here is the detail explanation of color properties.
-
-| Color Property       | Definition & Usage                                         |
-| -------------------- | ---------------------------------------------------------- |
-| `--color-fill`       | Primary color of the website. Usually the main background. |
-| `--color-text-base`  | Secondary color of the website. Usually the text color.    |
-| `--color-accent`     | Accent color of the website. Link color, hover color etc.  |
-| `--color-card`       | Card, scrollbar and code background color (like `this`).   |
-| `--color-card-muted` | Card and scrollbar background color for hover state etc.   |
-| `--color-border`     | Border color. Especially used in horizontal row (hr)       |
-
-Here is an example of changing the light color scheme.
-
-```css
-@layer base {
-  /* lobster color scheme */
-  :root,
-  html[data-theme="light"] {
-    --color-fill: 246, 238, 225;
-    --color-text-base: 1, 44, 86;
-    --color-accent: 225, 74, 57;
-    --color-card: 220, 152, 145;
-    --color-card-muted: 233, 119, 106;
-    --color-border: 220, 152, 145;
-  }
-}
-```
-
-> Check out some [predefined color schemes](https://astro-paper.pages.dev/posts/predefined-color-schemes/) AstroPaper has already crafted for you.
+Regards,
+Nishant Iyer

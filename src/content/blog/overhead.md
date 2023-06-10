@@ -1,52 +1,27 @@
 ---
-author: Sat Naing
-pubDatetime: 2022-12-28T04:59:04.866Z
-title: Dynamic OG image generation in AstroPaper blog posts
-postSlug: dynamic-og-image-generation-in-astropaper-blog-posts
-featured: false
+author: Nishant
+pubDatetime: 2023-06-03T00:00:00Z
+title: uNet Overhead Testing
+postSlug: unet-overhead-testing
+featured: true
 draft: false
 tags:
   - docs
-  - release
 ogImage: ""
-description: New feature in AstroPaper v1.4.0, introducing dynamic OG image generation for blog posts.
+description:
+  uNet overhead
 ---
 
-New feature in AstroPaper v1.4.0, introducing dynamic OG image generation for blog posts.
+**4.3. Overhead:**
 
-## Table of contents
+The overhead of Portena, developed in 2023, primarily arises from the display system, while the storage introduces minimal overhead, usually less than 0.5% of the system's CPU and memory. Therefore, we focus on evaluating the display overhead of the Portena system. The display overhead is measured on both the server side and the client side.
 
-## Intro
+**Figure 7. Overhead on the Client:**
 
-OG images (aka Social Images) play an important role in social media engagements. In case you don't know what OG image means, it is an image displayed whenever we share our website URL on social media such as Facebook, Discord etc.
+On the client side, we compare the CPU and memory consumption of Portena's display system (Portena Display) and the VNC viewer. We consider three typical cases in our experiment: standby, web browsing, and stream media playing. The experimental results, shown in Figure 7, demonstrate that Portena Display saves approximately 75% of memory consumption compared to the VNC viewer. However, the CPU consumption of Portena Display is slightly higher than that of the VNC viewer. Portena achieves memory savings by loading a smaller software suite and reducing data copy operations. The optimizations in Portena Display simplify data transport and processing, resulting in reduced memory requirements for data buffering or caching. The increased CPU consumption in Portena Display can be attributed to the absence of hardware acceleration provided by the Linux framebuffer driver used in 2023, as opposed to the Xlib-based VNC viewer.
 
-> The Social Image used for Twitter is technically not called OG image. However, in this post, I'll be using the term OG image for all types of Social Images.
+![Overhead on the Client](https://media.discordapp.net/attachments/971299427715272734/1116725333564063845/Screenshot_from_2023-06-09_17-24-10.png?width=437&height=242)
 
-## Default/Static OG image (the old way)
+**On the server side**, we measure the CPU and memory overhead brought by the Portena GUI merger in three typical cases: standby, i-Bench execution, and stream media execution. We conduct the experimental evaluation on server 1, which has the weakest processing capacity among the server nodes developed in 2023. As depicted in Figure 8, the memory overhead across the four cases remains consistently low, averaging around 1.3%. This memory overhead has minimal impact on the system's performance. The CPU overhead varies significantly among the three use cases. During client standby, the CPU overhead is approximately 1%. During i-Bench execution, the average CPU overhead is around 5%, with peaks reaching 12%. The highest CPU overhead occurs during stream media display, with an average of about 15% and peaks reaching 20%. Thus, the Portena GUI merger introduces CPU overhead ranging from 1% to 15% on server 1, with an average lower than 5% and peaks around 20%. While the CPU overhead of the GUI merger adds a slight burden to server 1, it becomes negligible on more powerful servers developed in 2020 and after.
 
-AstroPaper already provided a way to add an OG image to a blog post. The author can specify the OG image in the frontmatter `ogImage`. Even when the author doesn't define the OG image in the frontmatter, the default OG image will be used as a fallback (in this case `public/astropaper-og.jpg`). But the problem is that the default OG image is static, which means every blog post that does not include an OG image in the frontmatter will always use the same default OG image despite each post title/content being different from others.
-
-## Dynamic OG Image
-
-Generating a dynamic OG image for each post allows the author to avoid specifying an OG image for every single blog post. Besides, this will prevent the fallback OG image from being identical to all blog posts.
-
-In AstroPaper v1.4.0, Vercel's [Satori](https://github.com/vercel/satori) package is used for dynamic OG image generation.
-
-Dynamic OG images will be generated at build time for blog posts that
-
-- don't include OG image in the frontmatter
-- are not marked as draft.
-
-## Anatomy of AstroPaper dynamic OG image
-
-Dynamic OG image of AstroPaper includes _the blog post title_, _author name_ and _site title_. Author name and site title will be retrieved via `SITE.author` and `SITE.title` of **"src/config.ts"** file. The title is generated from the blog post frontmatter `title`.  
-![Example Dynamic OG Image link](https://user-images.githubusercontent.com/53733092/209704501-e9c2236a-3f4d-4c67-bab3-025aebd63382.png)
-
-## Limitations
-
-At the time of writing this, [Satori](https://github.com/vercel/satori) is fairly new and has not reached major release yet. So, there are still some limitations to this dynamic OG image feature.
-
-- If you have Blog posts with non-English titles, you have to set `embedFonts` option to `false` (file: `src/utils/generateOgImage.tsx`). Even after this, the OG image might not be displayed very well.
-- Besides, RTL languages are not supported yet.
-- [Using emoji](https://github.com/vercel/satori#emojis) in the title might be a little bit tricky.
-- Sadly, this new dynamic OG image generation feature cannot be used for Twitter social images since `svg` image type is not supported for Twitter Cards.
+![Overhead on the Server](https://media.discordapp.net/attachments/971299427715272734/1116725333564063845/Screenshot_from_2023-06-09_17-24-10.png?width=437&height=242)

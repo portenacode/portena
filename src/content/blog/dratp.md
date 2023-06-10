@@ -1,91 +1,79 @@
 ---
-author: Sat Naing
-pubDatetime: 2023-01-30T15:57:52.737Z
-title: AstroPaper 2.0
-postSlug: astro-paper-2
+author: Nishant
+pubDatetime: 2023-03-03T00:00:00Z
+title: DRATP
+postSlug: dratp
 featured: true
-ogImage: https://user-images.githubusercontent.com/53733092/215771435-25408246-2309-4f8b-a781-1f3d93bdf0ec.png
+draft: false
 tags:
-  - release
-description: AstroPaper with the enhancements of Astro v2. Type-safe markdown contents, bug fixes and better dev experience etc.
+  - docs
+ogImage: ""
+description: Dynamic Resource Allocation and Task Prioritization plugin for each instance in CoaaS.
 ---
 
-Astro 2.0 has been released with some cool features, breaking changes, DX improvements, better error overlay and so on. AstroPaper takes advantage of those cool features, especially Content Collections API.
+## DRATP (Dynamic Resource Allocation and Task Prioritization):
 
-<!-- ![Introducing AstroPaper 2.0](https://user-images.githubusercontent.com/53733092/215683840-dc2502f5-8c5a-44f0-a26c-4e7180455056.png) -->
+Dynamic Resource Allocation and Task Prioritization (DRATP) is a server-side feature of the Portena system, developed by me, designed to optimize resource utilization and enhance the overall efficiency of the platform. DRATP leverages advanced machine learning algorithms and intelligent task scheduling techniques to dynamically allocate computing resources based on application requirements and priorities.
 
-![Introducing AstroPaper 2.0](https://user-images.githubusercontent.com/53733092/215771435-25408246-2309-4f8b-a781-1f3d93bdf0ec.png)
+DRATP continuously monitors the performance and resource utilization of each running application within the Portena ecosystem. By analyzing factors such as CPU usage, memory requirements, network bandwidth, and input/output operations, DRATP intelligently allocates computing resources in real-time to ensure optimal performance and responsiveness.
 
-## Table of contents
+One of the key aspects of DRATP is its ability to prioritize tasks based on their importance and urgency. By assigning different levels of priority to various applications, DRATP ensures that critical tasks receive the necessary resources and are executed with high efficiency. This prioritization mechanism allows for smooth execution of real-time applications, guaranteeing minimal latency and maximizing user experience.
 
-## Features & Changes
+In addition to resource allocation, DRATP incorporates predictive analysis capabilities to anticipate resource requirements for future tasks. By analyzing historical data and patterns, DRATP can proactively allocate resources in advance, minimizing response time and maximizing resource utilization. This predictive feature is particularly beneficial for applications with fluctuating resource demands, ensuring that resources are readily available when needed.
 
-### Type-safe Frontmatters and Redefined Blog Schema
+To further enhance resource utilization, Portena introduces the Compute-as-a-Service (CoaaS) model. CoaaS allows users to access virtual computing instances on-demand, eliminating the need for physical hardware and providing a flexible and scalable computing environment. The resource allocation model in Portena treats RAM, processors, and other components as a unified entity, allowing users to utilize computing resources based on their specific needs without wastage or overprovisioning.
 
-Frontmatter of AstroPaper 2.0 markdown contents are now type-safe thanks to Astro’s Content Collections. Blog schema is defined inside the `src/content/_schemas.ts` file.
+![Serverless model improvised for CoaaS](https://media.discordapp.net/attachments/971299427715272734/1116735543204886528/coaas.png?width=452&height=304)
 
-### New Home for Blog contents
+The dynamic resource pooling in Portena ensures efficient resource sharing among users. If one user's resource utilization is below their allocated capacity, the idle resources can be dynamically reassigned to other users with higher demands. This dynamic resource allocation minimizes waste and maximizes the utilization of available resources, resulting in cost savings and improved efficiency.
 
-All the blog posts were moved from `src/contents` to `src/content/blog` directory.
+To facilitate seamless integration, Portena provides a comprehensive management interface that allows users to monitor resource consumption, adjust allocation parameters, track performance metrics, and view detailed billing information. This interface empowers users to optimize their computing resources, enhance productivity, and have better control over their usage costs.
 
-### New Fetch API
+Overall, DRATP, combined with the innovative CoaaS approach and resource allocation model, positions Portena as a cutting-edge platform for efficient, scalable, and cost-effective computing. By harnessing the power of machine learning, intelligent task prioritization, and dynamic resource allocation, Portena enables users to optimize their computing resources, enhance productivity, and unlock new possibilities in the digital landscape.
 
-Contents are now fetched with `getCollection` function. No relative path to the content needs to be specified anymore.
+**Example 1: Task Prioritization**
 
-```ts
-// old content fetching method
-- const postImportResult = import.meta.glob<MarkdownInstance<Frontmatter>>(
-  "../contents/**/**/*.md",);
+Suppose the Portena system is running multiple applications with varying levels of priority. Here's an example of how DRATP prioritizes tasks:
 
-// new content fetching method
-+ const postImportResult = await getCollection("blog");
-```
+|Application        |Priority Level|
+|-------------------|--------------|
+|Video Streaming    |High          |
+|Background Backup  |Medium        |
+|File Download      |Low           |
 
-### Modified Search Logic for better Search Result
+In this scenario, DRATP will allocate more computing resources to the video streaming application to ensure smooth playback and minimal buffering. The background backup process will receive a moderate allocation, while the file download process will be allocated fewer resources since it has a lower priority.
 
-In the older version of AstroPaper, when someone search some article, the search criteria keys that will be searched are `title`, `description` and `headings` (heading means all the headings h1 ~ h6 of the blog post). In AstroPaper v2, only `title` and `description` will be searched as the user types.
+**Example 2: Dynamic Resource Allocation**
 
-### Renamed Frontmatter Properties
+Let's consider a case where the Portena system has three users with different resource demands. DRATP dynamically allocates resources based on their requirements:
 
-The following frontmatter properties are renamed.
+|User  |Resource Demand (RAM)|
+|------|--------------------|
+|User A|8GB                 |
+|User B|4GB                 |
+|User C|6GB                 |
 
-| Old Names | New Names   |
-| --------- | ----------- |
-| datetime  | pubDatetime |
-| slug      | postSlug    |
+Assuming the total available RAM is 16GB, DRATP will allocate resources as follows:
 
-### Default Tag for blog post
+|User  |Allocated Resources (RAM)|
+|------|------------------------|
+|User A|8GB                     |
+|User B|4GB                     |
+|User C|4GB                     |
 
-If a blog post doesn't have any tag (in other words, frontmatter property `tags` is not specified), the default tag `others` will be used for that blog post. But you can set the default tag in the `/src/content/_schemas.ts` file.
+In this case, DRATP dynamically adjusts resource allocation to ensure fair and efficient utilization based on user demands.
 
-```ts
-// src/contents/_schemas.ts
-export const blogSchema = z.object({
-  // ---
-  // replace "others" with whatever you want
-  tags: z.array(z.string()).default(["others"]),
-  ogImage: z.string().optional(),
-  description: z.string(),
-});
-```
+**Example 3: Predictive Resource Allocation**
 
-### New Predefined Dark Color Scheme
+DRATP's predictive analysis capabilities allow it to anticipate resource requirements for future tasks based on historical data. Here's an example:
 
-AstroPaper v2 has a new dark color scheme (high contrast & low contrast) which is based on Astro's dark logo. Check out [this link](https://astro-paper.pages.dev/posts/predefined-color-schemes#astro-dark) for more info.
+|Time (in secs)|CPU Usage (%)|Predicted Resource Allocation (RAM)|
+|--------------|--------------|-----------------------------------|
+|0             |20            |4GB                                |
+|1             |50            |8GB                                |
+|2             |30            |6GB                                |
+|3             |40            |6GB                                |
 
-![New Predefined Dark Color Scheme](https://user-images.githubusercontent.com/53733092/215680520-59427bb0-f4cb-48c0-bccc-f182a428d72d.svg)
+In this scenario, DRATP analyzes the historical CPU usage patterns and predicts the resource allocation required for future hours. This allows for proactive allocation, minimizing response time and ensuring resources are readily available.
 
-### Automatic Class Sorting
-
-AstroPaper 2.0 includes automatic class sorting with [TailwindCSS Prettier plugin](https://tailwindcss.com/blog/automatic-class-sorting-with-prettier)
-
-### Updated Docs & README
-
-All the [#docs](https://astro-paper.pages.dev/tags/docs/) blog posts and [README](https://github.com/satnaing/astro-paper#readme) are updated for this AstroPaper v2.
-
-## Bug Fixes
-
-- fix broken tags in the Blog Post page
-- in a tag page, the last part of the breadcrumb is now updated to lower-case for consistency
-- exclude draft posts in a tag page
-- fix 'onChange value not updating issue' after a page reload
+These examples and tables demonstrate how DRATP optimizes resource allocation and task prioritization in the Portena system, enhancing efficiency and performance.
